@@ -6,6 +6,12 @@ class ApplicationController < Sinatra::Base
     games.to_json
   end
 
+
+  get '/reviews' do
+    reviews = Review.all.order(:title).limit(10)
+    reviews.to_json
+  end
+
   get '/games/:id' do
     game = Game.find(params[:id])
 
@@ -15,5 +21,39 @@ class ApplicationController < Sinatra::Base
       } }
     })
   end
+
+  delete '/reviews/:id' do
+  
+    review = Review.find(params[:id])
+    review.destroy
+    review.to_json
+
+  end
+
+  post '/reviews' do
+    review = Review.create(
+      score: params[:score],
+      comment: params[:comment],
+      game_id: params[:game_id],
+      user_id: params[:user_id]
+    )
+    review.to_json
+  end
+  
+  patch '/reviews/:id' do 
+
+    reviewUpdate = Review.find(params[:id])
+
+    reviewUpdate.update(
+      score: params[:score],
+      comment: params[:comment],
+      )
+      reviewUpdate.to_json
+
+
+  
+
+  end
+
 
 end
